@@ -530,8 +530,6 @@ class ResumeApp:
         """Render the dashboard page"""
         self.dashboard_manager.render_dashboard()
 
-        st.toast("Check out these repositories: [Awesome Hacking](https://github.com/Hunterdii/Awesome-Hacking)", icon="ℹ️")
-
 
     def render_empty_state(self, icon, message):
         """Render an empty state with icon and message"""
@@ -938,8 +936,6 @@ class ResumeApp:
                             # Offer the resume for download
                             st.success("✅ Resume generated successfully!")
 
-                            # Show snowflake effect
-                            st.snow()
 
                             st.download_button(
                                 label="Download Resume 📥",
@@ -983,8 +979,6 @@ class ResumeApp:
                 print(f"Error preparing resume data: {str(e)}")
                 print(f"Full traceback: {traceback.format_exc()}")
                 st.error(f"❌ Error preparing resume data: {str(e)}")
-
-        st.toast("Check out these repositories: [30-Days-Of-Rust](https://github.com/Hunterdii/30-Days-Of-Rust)", icon="ℹ️")
 
     def render_about(self):
         """Render the about page"""
@@ -1222,8 +1216,6 @@ class ResumeApp:
             </div>
         """, unsafe_allow_html=True)
 
-        st.toast("Check out these repositories: [Iriswise](https://github.com/Hunterdii/Iriswise)", icon="ℹ️")
-
     def render_analyzer(self):
         """Render the resume analyzer page"""
         apply_modern_styles()
@@ -1352,9 +1344,6 @@ class ResumeApp:
                         if 'error' in analysis:
                             st.error(analysis['error'])
                             return
-
-                        # Show snowflake effect
-                        st.snow()
 
                         # Save resume data to database
                         resume_data = {
@@ -1600,12 +1589,6 @@ class ResumeApp:
 
                         st.markdown("</div>", unsafe_allow_html=True)
 
-                        # Course Recommendations
-                    st.markdown("""
-                        <div class="feature-card">
-                            <h2>📚 Recommended Courses</h2>
-                        """, unsafe_allow_html=True)
-
                         # Get courses based on role and category
                     courses = get_courses_for_role(selected_role)
                     if not courses:
@@ -1627,33 +1610,7 @@ class ResumeApp:
 
                     st.markdown("</div>", unsafe_allow_html=True)
 
-                        # Learning Resources
-                    st.markdown("""
-                        <div class="feature-card">
-                            <h2>📺 Helpful Videos</h2>
-                        """, unsafe_allow_html=True)
 
-                    tab1, tab2 = st.tabs(["Resume Tips", "Interview Tips"])
-
-                    with tab1:
-                            # Resume Videos
-                            for category, videos in RESUME_VIDEOS.items():
-                                st.subheader(category)
-                                cols = st.columns(2)
-                                for i, video in enumerate(videos):
-                                    with cols[i % 2]:
-                                        st.video(video[1])
-
-                    with tab2:
-                            # Interview Videos
-                            for category, videos in INTERVIEW_VIDEOS.items():
-                                st.subheader(category)
-                                cols = st.columns(2)
-                                for i, video in enumerate(videos):
-                                    with cols[i % 2]:
-                                        st.video(video[1])
-
-                    st.markdown("</div>", unsafe_allow_html=True)
 
         with analyzer_tabs[1]:
             st.markdown("""
@@ -2400,9 +2357,7 @@ class ResumeApp:
                                             "job_role": job_role
                                         }
                                     )
-                                # show snowflake effect
-                                st.snow()
-
+                                    
                                 # Complete the progress
                                 progress_bar.progress(100)
                                 
@@ -2781,8 +2736,6 @@ class ResumeApp:
                             import traceback as tb
                             st.code(tb.format_exc())
 
-        st.toast("Check out these repositories: [Awesome Java](https://github.com/Hunterdii/Awesome-Java)", icon="ℹ️")
-
 
     def render_home(self):
         apply_modern_styles()
@@ -2831,8 +2784,6 @@ class ResumeApp:
         """Render the job search page"""
         render_job_search()
 
-        st.toast("Check out these repositories: [GeeksforGeeks-POTD](https://github.com/Hunterdii/GeeksforGeeks-POTD)", icon="ℹ️")
-
 
     def render_feedback_page(self):
         """Render the feedback page"""
@@ -2855,9 +2806,6 @@ class ResumeApp:
             
         with stats_tab:
             feedback_manager.render_feedback_stats()
-
-        st.toast("Check out these repositories: [TryHackMe Free Rooms](https://github.com/Hunterdii/tryhackme-free-rooms)", icon="ℹ️")
-
 
     def show_repo_notification(self):
         message = """
@@ -2885,8 +2833,6 @@ class ResumeApp:
     <div style="margin-top: 10px;">If you find this project helpful, please consider ⭐ starring the repo!</div>
 </div>
 """
-        st.sidebar.markdown(message, unsafe_allow_html=True)
-
 
     def main(self):
         """Main application entry point"""
@@ -2909,34 +2855,6 @@ class ResumeApp:
             st.markdown("<br><br>", unsafe_allow_html=True)
             st.markdown("---")
 
-            # Admin Login/Logout section at bottom
-            if st.session_state.get('is_admin', False):
-                st.success(f"Logged in as: {st.session_state.get('current_admin_email')}")
-                if st.button("Logout", key="logout_button"):
-                    try:
-                        log_admin_action(st.session_state.get('current_admin_email'), "logout")
-                        st.session_state.is_admin = False
-                        st.session_state.current_admin_email = None
-                        st.success("Logged out successfully!")
-                        st.rerun()
-                    except Exception as e:
-                        st.error(f"Error during logout: {str(e)}")
-            else:
-                with st.expander("👤 Admin Login"):
-                    admin_email_input = st.text_input("Email", key="admin_email_input")
-                    admin_password = st.text_input("Password", type="password", key="admin_password_input")
-                    if st.button("Login", key="login_button"):
-                            try:
-                                if verify_admin(admin_email_input, admin_password):
-                                    st.session_state.is_admin = True
-                                    st.session_state.current_admin_email = admin_email_input
-                                    log_admin_action(admin_email_input, "login")
-                                    st.success("Logged in successfully!")
-                                    st.rerun()
-                                else:
-                                    st.error("Invalid credentials")
-                            except Exception as e:
-                                st.error(f"Error during login: {str(e)}")
         
             # Display the repository notification in the sidebar
             self.show_repo_notification()
